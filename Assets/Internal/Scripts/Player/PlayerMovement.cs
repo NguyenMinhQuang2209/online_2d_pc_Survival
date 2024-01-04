@@ -11,6 +11,10 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float runSpeed = 2f;
 
+    [Space(5)]
+    [Header("Weapon config")]
+    [SerializeField] private Transform weaponContainer;
+
     Vector2 movement;
     Animator animator;
     public override void OnNetworkSpawn()
@@ -69,5 +73,15 @@ public class PlayerMovement : NetworkBehaviour
             }
             rb.MovePosition(rb.position + speed * Time.fixedDeltaTime * movement.normalized);
         }
+    }
+    public void EquipmentWeapon(Weapon weapon)
+    {
+        foreach (Transform child in weaponContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        Weapon weaponTemp = Instantiate(weapon, weaponContainer.transform);
+        weaponTemp.transform.localPosition = Vector3.zero;
     }
 }
