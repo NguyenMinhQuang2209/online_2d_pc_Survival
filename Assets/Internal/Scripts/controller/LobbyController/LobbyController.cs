@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -33,6 +32,8 @@ public class LobbyController : MonoBehaviour
     public Button reloadBtn;
     public Button createLobbyBtn;
     public LobbyItem lobbyItem;
+    public TMP_InputField lobbyCodeInput;
+    public Button joinLobbyByCodeBtn;
 
     [Space(5)]
     [Header("Create lobby UI")]
@@ -61,6 +62,8 @@ public class LobbyController : MonoBehaviour
     public InsideLobbyItem insideLobbyItem;
     public Button readyBtn;
     public TextMeshProUGUI readyTxt;
+    public TextMeshProUGUI lobbyCodeTxt;
+    public Button lobbyCodeCopyBtn;
 
     public event EventHandler<LobbyEventArgs> OnJoinedSystem;
     public event EventHandler<SingleLobbyeventArgs> OnJoinLobbyEvent;
@@ -73,6 +76,9 @@ public class LobbyController : MonoBehaviour
     [SerializeField] private float reloadLobbyTime = 1.1f;
     float currentReloadLobbyTime = 0f;
     float currentHeartBeatLobbyTime = 0f;
+
+
+    bool wasJoinedLobby = false;
 
     public class LobbyEventArgs : EventArgs
     {
@@ -120,6 +126,11 @@ public class LobbyController : MonoBehaviour
             OnInsideLobbyReady();
         });
 
+        joinLobbyByCodeBtn.onClick.AddListener(() =>
+        {
+            JoinLobbyByCode();
+        });
+
         // Create new lobby Config
 
         xCreateLobbyBtn.onClick.AddListener(() =>
@@ -151,7 +162,11 @@ public class LobbyController : MonoBehaviour
         // end create new lobby
         outLobbyBtn.onClick.AddListener(() =>
         {
-            OnOutLobby(GetPlayerId());
+            OnOutLobby(GetPlayerId(), true);
+        });
+        lobbyCodeCopyBtn.onClick.AddListener(() =>
+        {
+            CopyLobbyCode();
         });
         // Inside lobby UI
 
@@ -178,7 +193,10 @@ public class LobbyController : MonoBehaviour
                     HeartBeatLobby();
                 }
             }
+        }
 
+        if (wasJoinedLobby)
+        {
             currentReloadLobbyTime += Time.deltaTime;
             if (currentReloadLobbyTime >= reloadLobbyTime)
             {
@@ -188,10 +206,14 @@ public class LobbyController : MonoBehaviour
         }
     }
 
+
     private void HandleLeftLobbyEvent(object sender, EventArgs e)
     {
+
         joinedLobby = null;
+        lobbyCodeInput.text = "";
         GetLobbyList("");
+        wasJoinedLobby = false;
         lobbyListContainer.SetActive(true);
         insideLobbyUIContainer.SetActive(false);
         createLobbyUIContainer.SetActive(false);
@@ -203,6 +225,9 @@ public class LobbyController : MonoBehaviour
 
         insidePlayerNameTxt.text = username;
         insideLobbyUINameTxt.text = joinedLobby.Name;
+        lobbyCodeTxt.text = joinedLobby.LobbyCode;
+
+        wasJoinedLobby = true;
 
         insideLobbyUIContainer.SetActive(true);
 
@@ -222,6 +247,32 @@ public class LobbyController : MonoBehaviour
         lobbyListContainer.SetActive(false);
         createLobbyUIContainer.SetActive(false);
     }
+
+    private async void JoinLobbyByCode()
+    {
+        try
+        {
+            string lobbyCode = lobbyCodeInput.text;
+            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode, new()
+            {
+                Player = GetPlayer()
+            });
+            if (lobby != null)
+            {
+                OnJoinLobbyEvent?.Invoke(this, new() { lobby = lobby });
+            }
+        }
+        catch (Exception e)
+        {
+            LogController.instance.Log(e.Message);
+        }
+    }
+    private void CopyLobbyCode()
+    {
+        string code = lobbyCodeTxt.text;
+        GUIUtility.systemCopyBuffer = code;
+    }
+
     private void SpawnInsideLobbyItem(Player player)
     {
         InsideLobbyItem tempInsideLobbyItem = Instantiate(insideLobbyItem, insideLobbyContent);
@@ -318,11 +369,9 @@ public class LobbyController : MonoBehaviour
                 CreateLobbyOptions options = new()
                 {
                     IsPrivate = c_isPrivate,
-                };
-                Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(c_lobbyName, members, new()
-                {
                     Player = GetPlayer()
-                });
+                };
+                Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(c_lobbyName, members, options);
                 joinedLobby = lobby;
                 OnJoinLobbyEvent?.Invoke(this, new()
                 {
@@ -426,6 +475,11 @@ public class LobbyController : MonoBehaviour
     {
         try
         {
+            if (!IsPlayerInLobby())
+            {
+                OnLeftLobbyEvent?.Invoke(this, null);
+            }
+
             if (joinedLobby != null)
             {
                 Lobby lobby = await LobbyService.Instance.GetLobbyAsync(joinedLobby.Id);
@@ -434,15 +488,10 @@ public class LobbyController : MonoBehaviour
                     lobby = lobby
                 });
             }
-
-            if (!IsPlayerInLobby())
-            {
-                OnLeftLobbyEvent?.Invoke(this, null);
-            }
-
         }
         catch (Exception e)
         {
+            OnLeftLobbyEvent?.Invoke(this, null);
             LogController.instance.Log(e.Message);
         }
     }
@@ -460,7 +509,7 @@ public class LobbyController : MonoBehaviour
         }
         return false;
     }
-    public async void OnOutLobby(string playerId)
+    public async void OnOutLobby(string playerId, bool isOwnOut = false)
     {
         try
         {
@@ -474,7 +523,10 @@ public class LobbyController : MonoBehaviour
                 {
                     await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
                 }
-                OnLeftLobbyEvent?.Invoke(this, null);
+                if (isOwnOut)
+                {
+                    OnLeftLobbyEvent?.Invoke(this, null);
+                }
             }
         }
         catch (Exception e)
