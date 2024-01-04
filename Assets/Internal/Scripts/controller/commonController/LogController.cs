@@ -14,6 +14,10 @@ public class LogController : MonoBehaviour
         }
         instance = this;
     }
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     public void Log(string msg)
     {
         Debug.Log(msg);

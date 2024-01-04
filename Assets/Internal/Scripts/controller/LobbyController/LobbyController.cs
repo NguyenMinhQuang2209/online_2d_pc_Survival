@@ -14,7 +14,7 @@ public class LobbyController : MonoBehaviour
 
     public static string KEY_PLAYER_NAME = "PlayerName";
     public static string KEY_PLAYER_READY = "PlayerReady";
-    public static string KEY_START_LOBBY = "StartLobby";
+    public static string KEY_START_RELAY_CODE = "RelayCode";
 
 
     [Header("Username UI")]
@@ -72,13 +72,21 @@ public class LobbyController : MonoBehaviour
     private Lobby joinedLobby = null;
 
     [Space(5)]
+    [Header("Loading")]
+    public GameObject loadingObject;
+
+    [Space(5)]
     [SerializeField] private float heartBeatLobbyTime = 15f;
     [SerializeField] private float reloadLobbyTime = 1.1f;
+    [SerializeField] private float waitStartGame = 5f;
+    float currentWaitStartGame = 0f;
     float currentReloadLobbyTime = 0f;
     float currentHeartBeatLobbyTime = 0f;
 
 
     bool wasJoinedLobby = false;
+
+    bool wasJoinRelay = false;
 
     public class LobbyEventArgs : EventArgs
     {
@@ -103,6 +111,7 @@ public class LobbyController : MonoBehaviour
         lobbyListContainer.SetActive(true);
         createLobbyUIContainer.SetActive(true);
         insideLobbyUIContainer.SetActive(true);
+        loadingObject.SetActive(false);
 
         loginBtn.onClick.AddListener(() =>
         {
@@ -182,6 +191,21 @@ public class LobbyController : MonoBehaviour
     }
     private void Update()
     {
+        if (wasJoinRelay)
+        {
+
+            if (IsLobbyOwner())
+            {
+                currentWaitStartGame += Time.deltaTime;
+                if (currentWaitStartGame >= waitStartGame)
+                {
+                    SceneController.instance.ChangeSceneSync(SceneController.SceneName.SelectScene, true);
+                }
+            }
+            return;
+        }
+        currentWaitStartGame = 0f;
+
         if (joinedLobby != null)
         {
             if (IsLobbyOwner())
@@ -369,7 +393,11 @@ public class LobbyController : MonoBehaviour
                 CreateLobbyOptions options = new()
                 {
                     IsPrivate = c_isPrivate,
-                    Player = GetPlayer()
+                    Player = GetPlayer(),
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        {KEY_START_RELAY_CODE, new DataObject(DataObject.VisibilityOptions.Member,"")}
+                    }
                 };
                 Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(c_lobbyName, members, options);
                 joinedLobby = lobby;
@@ -487,6 +515,14 @@ public class LobbyController : MonoBehaviour
                 {
                     lobby = lobby
                 });
+
+                string relayCode = lobby.Data[KEY_START_RELAY_CODE].Value;
+                if (relayCode != "")
+                {
+                    wasJoinRelay = true;
+                    RelayController.instance.JoinedLobby(relayCode);
+                    loadingObject.SetActive(true);
+                }
             }
         }
         catch (Exception e)
@@ -583,6 +619,19 @@ public class LobbyController : MonoBehaviour
                     if (!ready)
                     {
                         LogController.instance.Log("Member not ready all!");
+                    }
+                    else
+                    {
+                        string relayCode = await RelayController.instance.CreateLobby(joinedLobby.MaxPlayers);
+                        await LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new()
+                        {
+                            Data = new Dictionary<string, DataObject>
+                            {
+                                {KEY_START_RELAY_CODE,new DataObject(DataObject.VisibilityOptions.Member,relayCode) }
+                            }
+                        });
+                        wasJoinRelay = true;
+                        loadingObject.SetActive(true);
                     }
                 }
             }
