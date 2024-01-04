@@ -1,3 +1,4 @@
+using Cinemachine;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,26 +7,36 @@ public class PlayerMovement : NetworkBehaviour
     private Rigidbody2D rb;
     [Header("Config")]
     private Transform playerAvatar;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float runSpeed = 2f;
 
     Vector2 movement;
     Animator animator;
-
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        if (!IsOwner) return;
-
-        rb = GetComponent<Rigidbody2D>();
-        foreach (Transform child in transform)
+        if (IsOwner)
         {
-            if (child.gameObject.TryGetComponent<Animator>(out animator))
+            virtualCamera.Priority = 1;
+            virtualCamera.enabled = true;
+
+            rb = GetComponent<Rigidbody2D>();
+            foreach (Transform child in transform)
             {
-                playerAvatar = child.transform;
-                break;
+                if (child.gameObject.TryGetComponent<Animator>(out animator))
+                {
+                    playerAvatar = child.transform;
+                    break;
+                }
             }
         }
+        else
+        {
+            virtualCamera.Priority = 0;
+            virtualCamera.enabled = false;
+        }
     }
+
     private void Update()
     {
         if (!IsOwner) return;
