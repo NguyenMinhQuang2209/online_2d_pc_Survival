@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class DirectlyWeapon : Weapon
@@ -27,6 +28,10 @@ public class DirectlyWeapon : Weapon
                 float angle = i == 0 ? 0 : (i % 2) == 0 ? i * shootAngle : (i - 1) * -shootAngle;
                 Vector3 shootPosition = shootPos ? shootPos.position : transform.position;
                 Bullet tempBullet = Instantiate(bullet, shootPosition, Quaternion.Euler(0f, 0f, parent.eulerAngles.z + angle + 270f));
+                if (tempBullet.TryGetComponent<NetworkObject>(out var networkObject))
+                {
+                    networkObject.Spawn();
+                }
                 tempBullet.BulletInit(GetDamage(), tempBullet.transform.up * 2f, GetSpeed(), GetDelayDieTime());
             }
         }

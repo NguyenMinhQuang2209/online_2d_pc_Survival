@@ -24,7 +24,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
-        currentMode = GameMode.Lobby;
+        currentMode = GameMode.SelectWeapon;
     }
     public bool CanMove()
     {

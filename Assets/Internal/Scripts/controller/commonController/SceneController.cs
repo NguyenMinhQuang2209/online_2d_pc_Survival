@@ -9,7 +9,9 @@ public class SceneController : MonoBehaviour
     {
         Lobby,
         SelectScene,
-        Play
+        Map_1,
+        Map_2,
+        Map_3,
     }
     private void Awake()
     {
@@ -30,7 +32,7 @@ public class SceneController : MonoBehaviour
             case SceneName.SelectScene:
                 GameController.instance.ChangeCurrentMode(GameController.GameMode.SelectWeapon);
                 break;
-            case SceneName.Play:
+            case SceneName.Map_1:
                 GameController.instance.ChangeCurrentMode(GameController.GameMode.Play);
                 break;
         }
@@ -54,7 +56,7 @@ public class SceneController : MonoBehaviour
             case SceneName.SelectScene:
                 GameController.instance.ChangeCurrentMode(GameController.GameMode.SelectWeapon);
                 break;
-            case SceneName.Play:
+            default:
                 GameController.instance.ChangeCurrentMode(GameController.GameMode.Play);
                 break;
         }
@@ -68,5 +70,30 @@ public class SceneController : MonoBehaviour
             NetworkManager.Singleton.SceneManager.LoadScene(name.ToString(), LoadSceneMode.Additive);
         }
     }
+    public void ChangeSceneSync(int sceneV, bool isSingle)
+    {
+        SceneName sceneName = (SceneName)sceneV;
+        switch (sceneV)
+        {
+            case 0:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Lobby);
+                break;
+            case 1:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.SelectWeapon);
+                break;
+            default:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Play);
+                break;
+        }
 
+
+        if (isSingle)
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene(sceneName.ToString(), LoadSceneMode.Single);
+        }
+        else
+        {
+            NetworkManager.Singleton.SceneManager.LoadScene(sceneName.ToString(), LoadSceneMode.Additive);
+        }
+    }
 }
