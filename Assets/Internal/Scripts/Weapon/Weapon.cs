@@ -1,6 +1,5 @@
 using UnityEngine;
-using Unity.Netcode;
-public abstract class Weapon : NetworkBehaviour
+public abstract class Weapon : MonoBehaviour
 {
     [SerializeField] private int damage = 1;
     protected int plusDamage = 1;

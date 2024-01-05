@@ -1,4 +1,5 @@
 using Cinemachine;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ public class PlayerMovement : NetworkBehaviour
 
     Vector2 movement;
     Animator animator;
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -33,6 +35,7 @@ public class PlayerMovement : NetworkBehaviour
                     break;
                 }
             }
+
         }
         else
         {
@@ -47,6 +50,8 @@ public class PlayerMovement : NetworkBehaviour
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        MouseRotation();
     }
     private void FixedUpdate()
     {
@@ -78,10 +83,24 @@ public class PlayerMovement : NetworkBehaviour
     {
         foreach (Transform child in weaponContainer)
         {
+            if (child.TryGetComponent<NetworkObject>(out var networkObject))
+            {
+                networkObject.Despawn();
+            }
             Destroy(child.gameObject);
         }
 
-        Weapon weaponTemp = Instantiate(weapon, weaponContainer.transform);
-        weaponTemp.transform.localPosition = Vector3.zero;
+        if (weapon != null)
+        {
+            Weapon weaponTemp = Instantiate(weapon, weaponContainer.transform);
+            weaponTemp.transform.localPosition = Vector3.zero;
+        }
+    }
+    private void MouseRotation()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mouseDir = mousePos - (Vector2)weaponContainer.position;
+        float angle = Mathf.Atan2(mouseDir.y, mouseDir.x) * Mathf.Rad2Deg;
+        weaponContainer.rotation = Quaternion.Euler(new(0f, 0f, angle));
     }
 }
