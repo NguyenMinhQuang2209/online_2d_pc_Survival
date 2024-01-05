@@ -5,6 +5,11 @@ public class CirclelyWeapon : Weapon
     float currentTimeBwtAttack = 0f;
     private void Update()
     {
+        if (GameController.instance != null && !GameController.instance.CanShoot())
+        {
+            return;
+        }
+
         currentTimeBwtAttack += Time.deltaTime;
         if (currentTimeBwtAttack >= GetTimeBwtAttack())
         {

@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 3228787536859180570}
   - component: {fileID: 8316966591283455608}
   - component: {fileID: 6155119286414214202}
+  - component: {fileID: 800826739691171695}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -289,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3925338605
+  GlobalObjectIdHash: 4042209745
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -355,6 +356,18 @@ MonoBehaviour:
   moveSpeed: 3
   runSpeed: 5
   weaponContainer: {fileID: 9188540498384734382}
+--- !u!114 &800826739691171695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5052818517752266803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5abf8014f66b38c458e36942bab1bb1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5052818518629767977
 GameObject:
   m_ObjectHideFlags: 0

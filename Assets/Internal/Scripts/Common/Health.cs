@@ -4,8 +4,9 @@ public abstract class Health : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     protected int plusHealth = 0;
-    int currentHealth = 0;
-    public void HealthInit()
+    [SerializeField] private int currentHealth = 0;
+
+    public virtual void HealthInit()
     {
         currentHealth = GetMaxHealth();
     }
@@ -23,6 +24,11 @@ public abstract class Health : MonoBehaviour
     }
     public virtual void TakeDamage(int damage)
     {
+        if (GameController.instance != null && !GameController.instance.CanDie())
+        {
+            return;
+        }
+
         currentHealth = Mathf.Max(0, currentHealth - damage);
         if (currentHealth == 0)
         {

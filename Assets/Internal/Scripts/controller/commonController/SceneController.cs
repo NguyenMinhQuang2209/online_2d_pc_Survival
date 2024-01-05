@@ -8,7 +8,8 @@ public class SceneController : MonoBehaviour
     public enum SceneName
     {
         Lobby,
-        SelectScene
+        SelectScene,
+        Play
     }
     private void Awake()
     {
@@ -21,6 +22,19 @@ public class SceneController : MonoBehaviour
     }
     public void ChangeScene(SceneName name, bool isSingle)
     {
+        switch (name)
+        {
+            case SceneName.Lobby:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Lobby);
+                break;
+            case SceneName.SelectScene:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.SelectWeapon);
+                break;
+            case SceneName.Play:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Play);
+                break;
+        }
+
         if (isSingle)
         {
             SceneManager.LoadScene(name.ToString(), LoadSceneMode.Single);
@@ -32,6 +46,19 @@ public class SceneController : MonoBehaviour
     }
     public void ChangeSceneSync(SceneName name, bool isSingle)
     {
+        switch (name)
+        {
+            case SceneName.Lobby:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Lobby);
+                break;
+            case SceneName.SelectScene:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.SelectWeapon);
+                break;
+            case SceneName.Play:
+                GameController.instance.ChangeCurrentMode(GameController.GameMode.Play);
+                break;
+        }
+
         if (isSingle)
         {
             NetworkManager.Singleton.SceneManager.LoadScene(name.ToString(), LoadSceneMode.Single);

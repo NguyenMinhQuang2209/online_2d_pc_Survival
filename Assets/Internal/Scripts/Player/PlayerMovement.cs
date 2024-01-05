@@ -8,6 +8,7 @@ public class PlayerMovement : NetworkBehaviour
     private Rigidbody2D rb;
     [Header("Config")]
     private Transform playerAvatar;
+    private PlayerHealth playerHealth;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float runSpeed = 2f;
@@ -35,7 +36,10 @@ public class PlayerMovement : NetworkBehaviour
                     break;
                 }
             }
-
+            if (TryGetComponent<PlayerHealth>(out playerHealth))
+            {
+                playerHealth.HealthInit();
+            }
         }
         else
         {
@@ -61,6 +65,11 @@ public class PlayerMovement : NetworkBehaviour
     }
     private void Movement()
     {
+        if (GameController.instance != null && !GameController.instance.CanMove())
+        {
+            return;
+        }
+
         if (animator != null)
         {
             animator.SetFloat("Speed", movement.sqrMagnitude >= 0.1f ? 1f : 0f);
