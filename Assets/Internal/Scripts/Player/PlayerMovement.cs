@@ -9,7 +9,6 @@ public class PlayerMovement : NetworkBehaviour
     private Rigidbody2D rb;
     [Header("Config")]
     private Transform playerAvatar;
-    private PlayerHealth playerHealth;
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float runSpeed = 2f;
@@ -38,10 +37,6 @@ public class PlayerMovement : NetworkBehaviour
                     playerAvatar = child.transform;
                     break;
                 }
-            }
-            if (TryGetComponent<PlayerHealth>(out playerHealth))
-            {
-                playerHealth.HealthInit();
             }
 
             SceneController.instance.ChangeSceneEvent += HandleChangeScene;

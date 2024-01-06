@@ -94,6 +94,7 @@ public class Enemy : NetworkBehaviour
                 animator.SetBool("Dead", true);
                 agent.isStopped = true;
                 agent.enabled = false;
+                agent = null;
             }
         }
     }

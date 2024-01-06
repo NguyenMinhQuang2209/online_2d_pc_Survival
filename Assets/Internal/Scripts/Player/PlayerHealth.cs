@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class PlayerHealth : Health
 {
+    private void Start()
+    {
+        HealthInit();
+    }
     public override void HealthInit()
     {
         base.HealthInit();
