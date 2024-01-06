@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
     public static SceneController instance;
+
+    public event EventHandler ChangeSceneEvent;
+
+    string currentScene = "";
     public enum SceneName
     {
         Lobby,
@@ -21,6 +26,15 @@ public class SceneController : MonoBehaviour
             return;
         }
         instance = this;
+    }
+    private void Update()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName != currentScene)
+        {
+            currentScene = sceneName;
+            ChangeSceneEvent?.Invoke(this, null);
+        }
     }
     public void ChangeScene(SceneName name, bool isSingle)
     {
@@ -86,14 +100,6 @@ public class SceneController : MonoBehaviour
                 break;
         }
 
-
-        if (isSingle)
-        {
-            NetworkManager.Singleton.SceneManager.LoadScene(sceneName.ToString(), LoadSceneMode.Single);
-        }
-        else
-        {
-            NetworkManager.Singleton.SceneManager.LoadScene(sceneName.ToString(), LoadSceneMode.Additive);
-        }
+        ChangeSceneSync(sceneName, isSingle);
     }
 }

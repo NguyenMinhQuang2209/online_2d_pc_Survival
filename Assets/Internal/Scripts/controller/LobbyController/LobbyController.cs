@@ -519,9 +519,9 @@ public class LobbyController : MonoBehaviour
                 string relayCode = lobby.Data[KEY_START_RELAY_CODE].Value;
                 if (relayCode != "")
                 {
+                    loadingObject.SetActive(true);
                     wasJoinRelay = true;
                     RelayController.instance.JoinedLobby(relayCode);
-                    loadingObject.SetActive(true);
                 }
             }
         }
@@ -622,6 +622,7 @@ public class LobbyController : MonoBehaviour
                     }
                     else
                     {
+                        loadingObject.SetActive(true);
                         string relayCode = await RelayController.instance.CreateLobby(joinedLobby.MaxPlayers);
                         await LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new()
                         {
@@ -631,7 +632,6 @@ public class LobbyController : MonoBehaviour
                             }
                         });
                         wasJoinRelay = true;
-                        loadingObject.SetActive(true);
                     }
                 }
             }

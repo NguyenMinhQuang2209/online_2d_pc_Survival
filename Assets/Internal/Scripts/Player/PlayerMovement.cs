@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class PlayerMovement : NetworkBehaviour
     Vector2 movement;
     Animator animator;
 
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -40,6 +42,8 @@ public class PlayerMovement : NetworkBehaviour
             {
                 playerHealth.HealthInit();
             }
+
+            SceneController.instance.ChangeSceneEvent += HandleChangeScene;
         }
         else
         {
@@ -48,9 +52,24 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    private void HandleChangeScene(object sender, EventArgs e)
+    {
+        if (IsOwner)
+        {
+            if (CameraBoundController.instance != null)
+            {
+                if (virtualCamera.TryGetComponent<CinemachineConfiner2D>(out var compound))
+                {
+                    compound.m_BoundingShape2D = CameraBoundController.instance.cameraCompound;
+                }
+            }
+        }
+    }
+
     private void Update()
     {
         if (!IsOwner) return;
+
 
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
