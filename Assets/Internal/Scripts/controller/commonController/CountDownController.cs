@@ -31,7 +31,6 @@ public class CountDownController : NetworkBehaviour
         {
             int randomMap = Random.Range(0, maxMap);
             startGame = true;
-            Debug.Log("Start Game");
             SceneController.instance.ChangeSceneSync(randomMap + 2, true);
         }
     }

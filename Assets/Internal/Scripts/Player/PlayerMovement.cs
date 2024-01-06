@@ -17,6 +17,7 @@ public class PlayerMovement : NetworkBehaviour
     [Space(5)]
     [Header("Weapon config")]
     [SerializeField] private Transform weaponContainer;
+    [SerializeField] private GameObject defaultWeapon;
 
     Vector2 movement;
     Animator animator;
@@ -120,6 +121,7 @@ public class PlayerMovement : NetworkBehaviour
 
         if (weapon != null)
         {
+            Destroy(defaultWeapon);
             Weapon weaponTemp = Instantiate(weapon, weaponContainer.transform);
             weaponTemp.transform.localPosition = Vector3.zero;
         }
