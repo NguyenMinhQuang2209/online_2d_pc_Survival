@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomTargetWeapon : Weapon
@@ -5,26 +6,48 @@ public class RandomTargetWeapon : Weapon
     [SerializeField] private CustomBullet customBullet;
     [SerializeField] private float attackRadious = 1f;
     float currentTimeBwtAttack = 0f;
+
+    Transform rootParent = null;
+    private void Start()
+    {
+        rootParent = transform.parent;
+    }
     private void Update()
     {
         currentTimeBwtAttack += Time.deltaTime;
         if (currentTimeBwtAttack >= GetTimeBwtAttack())
         {
-            currentTimeBwtAttack = 0f;
             Shoot();
         }
     }
     public override void Shoot()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRadious);
+        List<Transform> tempHits = new();
         if (hits.Length > 0)
         {
-            bool isPlayer = false;
-            Transform nextTarget = hits[0].transform;
-            float currentDistance = Vector2.Distance(transform.position, nextTarget.position);
             for (int i = 0; i < hits.Length; i++)
             {
-                Transform temp = hits[i].transform;
+                Transform tempHit = hits[i].transform;
+
+                if (tempHit != rootParent)
+                {
+                    tempHits.Add(tempHit);
+                }
+
+            }
+
+            if (tempHits == null || tempHits.Count == 0)
+            {
+                return;
+            }
+
+            bool isPlayer = false;
+            Transform nextTarget = tempHits[0].transform;
+            float currentDistance = Vector2.Distance(transform.position, nextTarget.position);
+            for (int i = 0; i < tempHits.Count; i++)
+            {
+                Transform temp = tempHits[i];
                 if (temp.GetComponent<Health>() != null)
                 {
                     if (temp.CompareTag(CommonController.PLAYER_TAG))
@@ -62,6 +85,7 @@ public class RandomTargetWeapon : Weapon
 
             if (nextTarget != null)
             {
+                currentTimeBwtAttack = 0f;
                 CustomBullet customBull = Instantiate(customBullet, transform.position, Quaternion.identity);
                 customBull.CustomBulletInit(nextTarget, GetDamage(), GetSpeed(), GetDelayDieTime());
             }

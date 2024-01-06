@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  speed: 20
+  speed: 5
   timeBwtAttack: 2
   delayDieTimer: 5
   bulletAmount: 1

@@ -13,5 +13,6 @@ public class PlayerHealth : Health
     public override void DestroyObject()
     {
         //base.DestroyObject();
+        gameObject.SetActive(false);
     }
 }
