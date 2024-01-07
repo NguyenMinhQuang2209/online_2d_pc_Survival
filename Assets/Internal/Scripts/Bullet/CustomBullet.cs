@@ -41,12 +41,15 @@ public class CustomBullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject == target.gameObject)
+        if (target != null)
         {
-            if (target.TryGetComponent<Health>(out var health))
+            if (collision.gameObject == target.gameObject)
             {
-                health.TakeDamage(damage);
-                Destroy(gameObject);
+                if (target.TryGetComponent<Health>(out var health))
+                {
+                    health.TakeDamage(damage);
+                    Destroy(gameObject);
+                }
             }
         }
     }

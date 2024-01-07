@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UpgradeController : MonoBehaviour
@@ -15,6 +16,11 @@ public class UpgradeController : MonoBehaviour
     private int plusBulletTimeBwtAttack = 0;
     private int plusBulletDelayDieTimer = 0;
 
+    [SerializeField] private List<UpgradeItem> upgradeItems = new();
+
+    [SerializeField] private Transform upgradeUIContainer;
+
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -23,6 +29,13 @@ public class UpgradeController : MonoBehaviour
             return;
         }
         instance = this;
+    }
+    private void Start()
+    {
+        foreach (Transform child in upgradeUIContainer)
+        {
+            Destroy(child.gameObject);
+        }
     }
     public int GetPlusHealth()
     {
@@ -54,6 +67,7 @@ public class UpgradeController : MonoBehaviour
     }
     public void PlusItem(DropItemName itemName)
     {
+
         switch (itemName)
         {
             case DropItemName.Health:
@@ -78,6 +92,69 @@ public class UpgradeController : MonoBehaviour
                 plusBulletDelayDieTimer += 1;
                 break;
         }
+        SetUpgradeUI(itemName);
         UpgrdateEvent?.Invoke(this, itemName);
     }
+    private void SetUpgradeUI(DropItemName itemName)
+    {
+        int tempV = 0;
+        switch (itemName)
+        {
+            case DropItemName.Health:
+                tempV = plusHealth;
+                break;
+            case DropItemName.Mana:
+                tempV = plusMana;
+                break;
+            case DropItemName.Speed:
+                tempV = plusSpeed;
+                break;
+            case DropItemName.Damage:
+                tempV = plusBulletDamage;
+                break;
+            case DropItemName.TimeBwtAttack:
+                tempV = plusBulletTimeBwtAttack;
+                break;
+            case DropItemName.BulletSpeed:
+                tempV = plusBulletSpeed;
+                break;
+            case DropItemName.DelayDieTime:
+                tempV = plusBulletDelayDieTimer;
+                break;
+
+        }
+        for (int i = 0; i < upgradeUIContainer.childCount; i++)
+        {
+            Transform tempChild = upgradeUIContainer.GetChild(i);
+            if (tempChild.TryGetComponent<UpgradeUIItem>(out var item))
+            {
+                if (item.dropItemName == itemName)
+                {
+                    item.UpgradeUItemInit(tempV.ToString());
+                    return;
+                }
+            }
+        }
+        UpgradeUIItem tempUIItem = null;
+        for (int i = 0; i < upgradeItems.Count; i++)
+        {
+            UpgradeItem temp = upgradeItems[i];
+            if (temp.dropItemName == itemName)
+            {
+                tempUIItem = temp.uiItem;
+                break;
+            }
+        }
+        if (tempUIItem != null)
+        {
+            UpgradeUIItem temp = Instantiate(tempUIItem, upgradeUIContainer);
+            temp.UpgradeUItemInit(tempV.ToString());
+        }
+    }
+}
+[Serializable]
+public class UpgradeItem
+{
+    public UpgradeUIItem uiItem;
+    public DropItemName dropItemName;
 }

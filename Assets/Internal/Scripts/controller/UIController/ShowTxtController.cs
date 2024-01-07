@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class ShowTxtController : MonoBehaviour
+public class ShowTxtController : NetworkBehaviour
 {
     public static ShowTxtController instance;
     [SerializeField] private ShowTxtUI showTxtUI;
@@ -13,14 +14,14 @@ public class ShowTxtController : MonoBehaviour
         }
         instance = this;
     }
-    public void ShowUI(Vector3 pos, string txt, Color color)
+    [ServerRpc]
+    public void ShowUIServerRpc(Vector3 pos, string txt, Color color)
     {
         ShowTxtUI tempShowTxtUI = Instantiate(showTxtUI, pos + Vector3.up * 0.5f, Quaternion.identity);
-        tempShowTxtUI.ShowTxt(txt, color);
-    }
-    public void ShowUI(Vector3 pos, string txt)
-    {
-        ShowTxtUI tempShowTxtUI = Instantiate(showTxtUI, pos + Vector3.up * 0.5f, Quaternion.identity);
-        tempShowTxtUI.ShowTxt(txt, Color.red);
+        tempShowTxtUI.ShowTxtServerRpc(txt, color);
+        if (tempShowTxtUI.TryGetComponent<NetworkObject>(out var networkItem))
+        {
+            networkItem.Spawn();
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class RandomTargetWeapon : Weapon
@@ -92,6 +93,10 @@ public class RandomTargetWeapon : Weapon
             {
                 currentTimeBwtAttack = 0f;
                 CustomBullet customBull = Instantiate(customBullet, transform.position, Quaternion.identity);
+                if (customBull.TryGetComponent<NetworkObject>(out var networkItem))
+                {
+                    networkItem.Spawn();
+                }
                 customBull.CustomBulletInit(nextTarget, GetDamage(), GetSpeed(), GetDelayDieTime());
             }
         }

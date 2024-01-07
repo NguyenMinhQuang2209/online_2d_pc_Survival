@@ -11,6 +11,9 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float runSpeed = 2f;
+    [SerializeField] private float plusSpeed = 0.2f;
+
+    float currentPlusSpeed = 0f;
 
     [Space(5)]
     [Header("Weapon config")]
@@ -61,6 +64,9 @@ public class PlayerMovement : NetworkBehaviour
                     break;
                 case DropItemName.Mana:
                     playerHealth.AddPlusMana();
+                    break;
+                case DropItemName.Speed:
+                    currentPlusSpeed = UpgradeController.instance.GetPlusSpeed() * plusSpeed;
                     break;
             }
         }
@@ -129,11 +135,11 @@ public class PlayerMovement : NetworkBehaviour
             {
                 if (playerHealth.CanUseMana())
                 {
-                    speed = runSpeed;
+                    speed = runSpeed + currentPlusSpeed;
                     playerHealth.UseMana();
                 }
             }
-            rb.MovePosition(rb.position + speed * Time.fixedDeltaTime * movement.normalized);
+            rb.MovePosition(rb.position + (speed + currentPlusSpeed) * Time.fixedDeltaTime * movement.normalized);
         }
     }
     public void EquipmentWeapon(Weapon weapon)

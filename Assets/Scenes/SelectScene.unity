@@ -16070,7 +16070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startCountDown:
-    m_InternalValue: 5
+    m_InternalValue: 2
   countDownTxt: {fileID: 837439497}
   maxMap: 1
 --- !u!4 &1380172204

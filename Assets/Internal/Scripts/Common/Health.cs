@@ -32,7 +32,7 @@ public abstract class Health : MonoBehaviour
         currentHealth = Mathf.Max(0, currentHealth - damage);
         if (ShowTxtController.instance != null)
         {
-            ShowTxtController.instance.ShowUI(transform.position, damage.ToString());
+            ShowTxtController.instance.ShowUIServerRpc(transform.position, damage.ToString(), Color.red);
         }
         if (currentHealth == 0)
         {
