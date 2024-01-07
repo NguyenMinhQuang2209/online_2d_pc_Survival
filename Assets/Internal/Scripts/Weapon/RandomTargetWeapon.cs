@@ -14,6 +14,11 @@ public class RandomTargetWeapon : Weapon
     }
     private void Update()
     {
+        if (GameController.instance != null && !GameController.instance.CanShoot())
+        {
+            return;
+        }
+
         currentTimeBwtAttack += Time.deltaTime;
         if (currentTimeBwtAttack >= GetTimeBwtAttack())
         {

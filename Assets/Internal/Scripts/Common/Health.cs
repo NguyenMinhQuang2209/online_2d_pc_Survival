@@ -43,4 +43,8 @@ public abstract class Health : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    public virtual void RecoverHealth(int v)
+    {
+        currentHealth = Mathf.Min(currentHealth + v, GetMaxHealth());
+    }
 }

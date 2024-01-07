@@ -388,6 +388,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  plusHealthValue: 10
+  plusManaValue: 10
+  useManaRate: 1.3
+  maxMana: 50
+  waitRecoverMana: 3
+  waitUseMana: 8
+  recoverManaRate: 1
 --- !u!1 &5052818518629767977
 GameObject:
   m_ObjectHideFlags: 0

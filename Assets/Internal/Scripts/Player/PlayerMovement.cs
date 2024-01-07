@@ -1,6 +1,5 @@
 using Cinemachine;
 using System;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -21,6 +20,8 @@ public class PlayerMovement : NetworkBehaviour
     Vector2 movement;
     Animator animator;
 
+    private PlayerHealth playerHealth;
+
 
     public override void OnNetworkSpawn()
     {
@@ -38,6 +39,7 @@ public class PlayerMovement : NetworkBehaviour
                     break;
                 }
             }
+            playerHealth = GetComponent<PlayerHealth>();
 
             SceneController.instance.ChangeSceneEvent += HandleChangeScene;
         }
@@ -45,6 +47,22 @@ public class PlayerMovement : NetworkBehaviour
         {
             virtualCamera.Priority = 0;
             virtualCamera.enabled = false;
+        }
+    }
+
+    private void HandleUpgradeEvent(object sender, DropItemName e)
+    {
+        if (IsOwner)
+        {
+            switch (e)
+            {
+                case DropItemName.Health:
+                    playerHealth.AddPlusHealth();
+                    break;
+                case DropItemName.Mana:
+                    playerHealth.AddPlusMana();
+                    break;
+            }
         }
     }
 
@@ -58,6 +76,17 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     compound.m_BoundingShape2D = CameraBoundController.instance.cameraCompound;
                 }
+            }
+
+            if (PlayerUIController.instance != null)
+            {
+                playerHealth.InitSlider(PlayerUIController.instance.healthSlider, PlayerUIController.instance.manaSlider,
+                   PlayerUIController.instance.healthTxt, PlayerUIController.instance.manaTxt);
+            }
+
+            if (UpgradeController.instance != null)
+            {
+                UpgradeController.instance.UpgrdateEvent += HandleUpgradeEvent;
             }
         }
     }
@@ -96,9 +125,13 @@ public class PlayerMovement : NetworkBehaviour
                 playerAvatar.rotation = Quaternion.Euler(new(0f, movement.x < 0 ? 180f : 0f, 0f));
             }
             float speed = moveSpeed;
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                speed = runSpeed;
+                if (playerHealth.CanUseMana())
+                {
+                    speed = runSpeed;
+                    playerHealth.UseMana();
+                }
             }
             rb.MovePosition(rb.position + speed * Time.fixedDeltaTime * movement.normalized);
         }
@@ -128,4 +161,5 @@ public class PlayerMovement : NetworkBehaviour
         float angle = Mathf.Atan2(mouseDir.y, mouseDir.x) * Mathf.Rad2Deg;
         weaponContainer.rotation = Quaternion.Euler(new(0f, 0f, angle));
     }
+
 }

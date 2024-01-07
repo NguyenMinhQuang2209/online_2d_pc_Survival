@@ -9,30 +9,37 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected Bullet bullet;
     [SerializeField] protected float shootAngle = 8f;
     [SerializeField] protected Transform shootPos;
-    protected int plusDamage = 1;
-    protected int plusBulletAmount = 1;
-    protected float plusSpeed = 1f;
-    protected float reduceTimeBwtAttack = 0f;
-    protected float plusDelayDieTime = 1f;
+
+    [Space(5)]
+    [Header("Plus config")]
+    [SerializeField] private int plusBulletDamage = 0;
+    [SerializeField] private float plusBulletSpeed = 0f;
+    [SerializeField] private float plusBulletTimeBwtAttack = 0f;
+    [SerializeField] private float plusBulletDelayDieTimer = 0f;
+    [SerializeField] private int plusBulletAmount = 0;
     public int GetDamage()
     {
-        return damage + plusDamage;
+        int plusV = UpgradeController.instance != null ? UpgradeController.instance.GetPlusBulletDamage() : 0;
+        return damage + (plusBulletDamage * plusV);
     }
     public float GetSpeed()
     {
-        return speed + plusSpeed;
+        int plusV = UpgradeController.instance != null ? UpgradeController.instance.GetPlusBulletSpeed() : 0;
+        return speed + (plusBulletSpeed * plusV);
     }
     public float GetTimeBwtAttack()
     {
-        return timeBwtAttack - reduceTimeBwtAttack;
+        int plusV = UpgradeController.instance != null ? UpgradeController.instance.GetPlusBulletTimeBwtAttack() : 0;
+        return timeBwtAttack - (plusBulletTimeBwtAttack * plusV);
     }
     public float GetDelayDieTime()
     {
-        return delayDieTimer + plusDelayDieTime;
+        int plusV = UpgradeController.instance != null ? UpgradeController.instance.GetPlusBulletDelayDieTimer() : 0;
+        return delayDieTimer + (plusBulletDelayDieTimer * plusV);
     }
     public int GetBulletAmount()
     {
-        return plusBulletAmount + bulletAmount;
+        return bulletAmount + plusBulletAmount;
     }
     public virtual void Shoot()
     {

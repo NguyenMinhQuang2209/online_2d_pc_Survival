@@ -6096,7 +6096,7 @@ MonoBehaviour:
   loadingObject: {fileID: 1233661520}
   heartBeatLobbyTime: 20
   reloadLobbyTime: 1.1
-  waitStartGame: 5
+  waitStartGame: 4
 --- !u!1 &1233661520
 GameObject:
   m_ObjectHideFlags: 0
