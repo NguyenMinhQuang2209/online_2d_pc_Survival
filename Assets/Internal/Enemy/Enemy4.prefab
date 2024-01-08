@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth:
-    m_InternalValue: 20
+    m_InternalValue: 200
   currentHealth:
     m_InternalValue: 0
   delayDestroyTimer: 3
@@ -296,5 +296,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabf958ba06f68f42b24aee1d6bffff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropRate: 5
-  dropItemName: 
+  dropRate: 30
+  dropItemName: 02000000050000000400000006000000070000000800000000000000

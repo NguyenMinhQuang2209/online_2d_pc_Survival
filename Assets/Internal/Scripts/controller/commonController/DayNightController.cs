@@ -28,7 +28,6 @@ public class DayNightController : NetworkBehaviour
     {
         currentTime = DateTime.Now.Date + TimeSpan.FromHours(startAtHour);
         startTime = DateTime.Now.Date;
-        enabled = IsServer;
     }
     private void Update()
     {

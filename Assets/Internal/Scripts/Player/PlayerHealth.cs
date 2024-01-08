@@ -29,19 +29,17 @@ public class PlayerHealth : Health
 
     public override void OnNetworkSpawn()
     {
+        playerUpgrade = GetComponent<PlayerUpgrade>();
         HealthInit();
         if (IsOwner)
         {
             currentMana = maxMana;
-            playerUpgrade = GetComponent<PlayerUpgrade>();
         }
     }
     private void Update()
     {
         if (IsOwner)
         {
-
-            plusHealth.Value = playerUpgrade.GetPlusHealth() * plusHealthValue;
             plusMana = playerUpgrade.GetPlusMana() * plusManaValue;
 
             currentWaitRecoverMana += Time.deltaTime;
@@ -60,7 +58,17 @@ public class PlayerHealth : Health
                 }
             }
 
-            ReloadHealth();
+            ReloadSlider();
+        }
+        else
+        {
+            if (IsServer)
+            {
+                if (playerUpgrade != null)
+                {
+                    plusHealth.Value = playerUpgrade.GetPlusHealth() * plusHealthValue;
+                }
+            }
         }
     }
 
@@ -68,6 +76,22 @@ public class PlayerHealth : Health
     public override void DestroyObjectServerRpc()
     {
         //base.DestroyObject();
+        gameObject.SetActive(false);
+        DeactiveGameObjectClientRpc();
+        GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
+
+        if (player.Length == 0)
+        {
+            if (EndGameController.instance != null)
+            {
+                EndGameController.instance.EndGameServerRpc();
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void DeactiveGameObjectClientRpc()
+    {
         gameObject.SetActive(false);
     }
     public void AddPlusHealth()
@@ -125,7 +149,7 @@ public class PlayerHealth : Health
             }
         }
     }
-    private void ReloadHealth()
+    public void ReloadHealthTxt()
     {
         if (healthSlider != null)
         {
@@ -138,6 +162,12 @@ public class PlayerHealth : Health
             }
         }
     }
+
+    public void ReloadHealth()
+    {
+        plusHealth.Value = playerUpgrade.GetPlusHealth() * plusHealthValue;
+    }
+
     private void ReloadMana()
     {
         if (manaSlider != null)

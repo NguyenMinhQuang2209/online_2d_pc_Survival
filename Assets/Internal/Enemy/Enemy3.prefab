@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 5921949874481096513}
   - component: {fileID: 1217710590332673492}
   - component: {fileID: 4627048338085986726}
-  - component: {fileID: 5630997133618350815}
+  - component: {fileID: 903721053462026300}
   m_Layer: 6
   m_Name: Enemy3
   m_TagString: Enemy
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth:
-    m_InternalValue: 15
+    m_InternalValue: 100
   currentHealth:
     m_InternalValue: 0
   delayDestroyTimer: 3
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 1217710590332673492}
---- !u!114 &5630997133618350815
+--- !u!114 &903721053462026300
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -296,5 +296,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabf958ba06f68f42b24aee1d6bffff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropRate: 5
-  dropItemName: 
+  dropRate: 25
+  dropItemName: 02000000050000000400000006000000070000000800000000000000

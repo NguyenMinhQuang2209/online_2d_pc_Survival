@@ -100,15 +100,15 @@ MonoBehaviour:
   damage: 1
   speed: 5
   timeBwtAttack: 3
-  delayDieTimer: 5
+  delayDieTimer: 3
   bulletAmount: 1
   bulletPosition: 0
   shootAngle: 8
   shootPos: {fileID: 0}
   plusBulletDamage: 1
-  plusBulletSpeed: 1
-  plusBulletTimeBwtAttack: 1
-  plusBulletDelayDieTimer: 1
+  plusBulletSpeed: 0.5
+  plusBulletTimeBwtAttack: 0.05
+  plusBulletDelayDieTimer: 0.05
   plusBulletAmount: 1
   attackRadious: 8
   enemyMask:

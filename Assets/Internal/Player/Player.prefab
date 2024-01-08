@@ -389,13 +389,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth:
-    m_InternalValue: 100
+    m_InternalValue: 50
   currentHealth:
     m_InternalValue: 0
   plusHealthValue: 10
   plusManaValue: 10
   useManaRate: 1.3
-  maxMana: 50
+  maxMana: 20
   waitRecoverMana: 3
   waitUseMana: 8
   recoverManaRate: 1
@@ -411,6 +411,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0a87a4abb1a37b4084767bba0846fa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plusHealth:
+    m_InternalValue: 0
+  plusMana:
+    m_InternalValue: 0
+  plusSpeed:
+    m_InternalValue: 0
+  plusBulletDamage:
+    m_InternalValue: 0
+  plusBulletSpeed:
+    m_InternalValue: 0
+  plusBulletTimeBwtAttack:
+    m_InternalValue: 0
+  plusBulletDelayDieTimer:
+    m_InternalValue: 0
+  recoverHealth:
+    m_InternalValue: 0
 --- !u!1 &5052818518629767977
 GameObject:
   m_ObjectHideFlags: 0

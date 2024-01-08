@@ -132,13 +132,13 @@ MonoBehaviour:
   damage: 1
   speed: 200
   timeBwtAttack: 3
-  delayDieTimer: 1
-  bulletAmount: 1
+  delayDieTimer: 0.5
+  bulletAmount: 3
   bulletPosition: 2
   shootAngle: 8
   shootPos: {fileID: 5455139028362505054}
   plusBulletDamage: 1
-  plusBulletSpeed: 1
-  plusBulletTimeBwtAttack: 1
-  plusBulletDelayDieTimer: 1
+  plusBulletSpeed: 20
+  plusBulletTimeBwtAttack: 0.05
+  plusBulletDelayDieTimer: 0.05
   plusBulletAmount: 1

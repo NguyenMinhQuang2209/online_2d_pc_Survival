@@ -30,11 +30,21 @@ public class EnemyHealth : Health
         if (TryGetComponent<Collider2D>(out var collider2d))
         {
             collider2d.enabled = false;
+            DisableColliderOnClientRpc();
         }
         if (enemy != null)
         {
             enemy.EnemyDie();
         }
         Destroy(gameObject, delayDestroyTimer);
+    }
+
+    [ClientRpc]
+    void DisableColliderOnClientRpc()
+    {
+        if (TryGetComponent<Collider2D>(out var collider2d))
+        {
+            collider2d.enabled = false;
+        }
     }
 }

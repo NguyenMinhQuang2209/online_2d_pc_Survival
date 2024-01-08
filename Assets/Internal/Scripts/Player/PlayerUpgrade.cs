@@ -10,6 +10,13 @@ public class PlayerUpgrade : NetworkBehaviour
     [SerializeField] private NetworkVariable<int> plusBulletSpeed = new NetworkVariable<int>(0);
     [SerializeField] private NetworkVariable<int> plusBulletTimeBwtAttack = new NetworkVariable<int>(0);
     [SerializeField] private NetworkVariable<int> plusBulletDelayDieTimer = new NetworkVariable<int>(0);
+    [SerializeField] private NetworkVariable<int> recoverHealth = new NetworkVariable<int>(0);
+
+    private PlayerHealth playerHealth;
+    public override void OnNetworkSpawn()
+    {
+        playerHealth = GetComponent<PlayerHealth>();
+    }
     private void Update()
     {
         if (IsOwner)
@@ -25,6 +32,15 @@ public class PlayerUpgrade : NetworkBehaviour
                     plusBulletTimeBwtAttack.Value,
                     plusBulletDelayDieTimer.Value
                     );
+            }
+        }
+
+        if (IsServer)
+        {
+            if (recoverHealth.Value > 0)
+            {
+                recoverHealth.Value -= 1;
+                playerHealth.RecoverHealthServerRpc(15);
             }
         }
     }
@@ -54,6 +70,9 @@ public class PlayerUpgrade : NetworkBehaviour
                 break;
             case DropItemName.DelayDieTime:
                 plusBulletDelayDieTimer.Value += 1;
+                break;
+            case DropItemName.RecoverHealth:
+                recoverHealth.Value += 1;
                 break;
         }
     }
