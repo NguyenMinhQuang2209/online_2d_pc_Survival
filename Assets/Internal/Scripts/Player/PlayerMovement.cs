@@ -29,6 +29,8 @@ public class PlayerMovement : NetworkBehaviour
 
     Weapon currentWeapon = null;
 
+    private PlayerUpgrade playerUpgrade = null;
+
 
     public override void OnNetworkSpawn()
     {
@@ -52,6 +54,7 @@ public class PlayerMovement : NetworkBehaviour
             {
 
             }
+            playerUpgrade = GetComponent<PlayerUpgrade>();
 
             SceneController.instance.ChangeSceneEvent += HandleChangeScene;
         }
@@ -98,11 +101,6 @@ public class PlayerMovement : NetworkBehaviour
                 playerHealth.InitSlider(PlayerUIController.instance.healthSlider, PlayerUIController.instance.manaSlider,
                    PlayerUIController.instance.healthTxt, PlayerUIController.instance.manaTxt);
             }
-
-            if (UpgradeController.instance != null)
-            {
-                UpgradeController.instance.UpgrdateEvent += HandleUpgradeEvent;
-            }
         }
     }
 
@@ -117,6 +115,8 @@ public class PlayerMovement : NetworkBehaviour
         MouseRotation();
 
         WeaponShoot();
+
+        currentPlusSpeed = playerUpgrade.GetPlusSpeed() * plusSpeed;
 
     }
     private void WeaponShoot()

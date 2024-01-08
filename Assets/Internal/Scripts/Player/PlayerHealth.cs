@@ -23,20 +23,27 @@ public class PlayerHealth : Health
     private TextMeshProUGUI healthTxt;
     private TextMeshProUGUI manaTxt;
 
+    private PlayerUpgrade playerUpgrade = null;
+
     private bool canUseMana = true;
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
+        HealthInit();
+        if (IsOwner)
         {
-            HealthInit();
+            currentMana = maxMana;
+            playerUpgrade = GetComponent<PlayerUpgrade>();
         }
-        currentMana = maxMana;
     }
     private void Update()
     {
         if (IsOwner)
         {
+
+            plusHealth.Value = playerUpgrade.GetPlusHealth() * plusHealthValue;
+            plusMana = playerUpgrade.GetPlusMana() * plusManaValue;
+
             currentWaitRecoverMana += Time.deltaTime;
             if (currentWaitRecoverMana >= waitRecoverMana)
             {

@@ -5,10 +5,13 @@ public class EnemyHealth : Health
 {
     private Enemy enemy;
     [SerializeField] private float delayDestroyTimer = 2f;
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         enemy = GetComponent<Enemy>();
-        HealthInit();
+        if (IsServer)
+        {
+            HealthInit();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]

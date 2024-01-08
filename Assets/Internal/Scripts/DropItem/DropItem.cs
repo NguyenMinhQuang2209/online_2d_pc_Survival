@@ -8,14 +8,27 @@ public class DropItem : NetworkBehaviour
     {
         if (collision.TryGetComponent<PlayerMovement>(out var playerMovement))
         {
-            UpgradeController.instance.PlusItem(dropItemName);
-            PlayerPickupServerRpc();
+
+            PlayerPickupServerRpc(playerMovement.NetworkObjectId);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlayerPickupServerRpc()
+    public void PlayerPickupServerRpc(ulong id)
     {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            var p = players[i];
+            if (p.TryGetComponent<PlayerUpgrade>(out var playerUpgrade))
+            {
+                if (playerUpgrade.NetworkObjectId == id)
+                {
+                    playerUpgrade.PlusItem(dropItemName);
+                    break;
+                }
+            }
+        }
         Destroy(gameObject);
     }
 }

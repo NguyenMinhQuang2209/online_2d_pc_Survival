@@ -6,8 +6,6 @@ public class UpgradeController : MonoBehaviour
 {
     public static UpgradeController instance;
 
-    public event EventHandler<DropItemName> UpgrdateEvent;
-
     private int plusHealth = 0;
     private int plusMana = 0;
     private int plusSpeed = 0;
@@ -65,90 +63,99 @@ public class UpgradeController : MonoBehaviour
     {
         return plusBulletDelayDieTimer;
     }
-    public void PlusItem(DropItemName itemName)
+    public void SetPlusValue(
+        int plusHealth,
+        int plusMana,
+        int plusSpeed,
+        int plusBulletDamage,
+        int plusBulletSpeed,
+        int plusBulletTimeBwtAttack,
+        int plusBulletDelayDieTimer)
     {
-
-        switch (itemName)
+        bool needUpgradeUI = false;
+        if (this.plusHealth != plusHealth)
         {
-            case DropItemName.Health:
-                plusHealth += 1;
-                break;
-            case DropItemName.Mana:
-                plusMana += 1;
-                break;
-            case DropItemName.Speed:
-                plusSpeed += 1;
-                break;
-            case DropItemName.Damage:
-                plusBulletDamage += 1;
-                break;
-            case DropItemName.TimeBwtAttack:
-                plusBulletTimeBwtAttack += 1;
-                break;
-            case DropItemName.BulletSpeed:
-                plusBulletSpeed += 1;
-                break;
-            case DropItemName.DelayDieTime:
-                plusBulletDelayDieTimer += 1;
-                break;
+            this.plusHealth = plusHealth;
+            needUpgradeUI = true;
         }
-        SetUpgradeUI(itemName);
-        UpgrdateEvent?.Invoke(this, itemName);
+
+        if (this.plusMana != plusMana)
+        {
+            this.plusMana = plusMana;
+            needUpgradeUI = true;
+        }
+        if (this.plusSpeed != plusSpeed)
+        {
+            this.plusSpeed = plusSpeed;
+            needUpgradeUI = true;
+        }
+        if (this.plusBulletSpeed != plusBulletSpeed)
+        {
+            this.plusBulletSpeed = plusBulletSpeed;
+            needUpgradeUI = true;
+        }
+        if (this.plusBulletDamage != plusBulletDamage)
+        {
+            this.plusBulletDamage = plusBulletDamage;
+            needUpgradeUI = true;
+        }
+        if (this.plusBulletDelayDieTimer != plusBulletDelayDieTimer)
+        {
+            this.plusBulletDelayDieTimer = plusBulletDelayDieTimer;
+            needUpgradeUI = true;
+        }
+        if (this.plusBulletTimeBwtAttack != plusBulletTimeBwtAttack)
+        {
+            this.plusBulletTimeBwtAttack = plusBulletTimeBwtAttack;
+            needUpgradeUI = true;
+        }
+
+        if (needUpgradeUI)
+        {
+            SetUpgradeUI();
+        }
     }
-    private void SetUpgradeUI(DropItemName itemName)
-    {
-        int tempV = 0;
-        switch (itemName)
-        {
-            case DropItemName.Health:
-                tempV = plusHealth;
-                break;
-            case DropItemName.Mana:
-                tempV = plusMana;
-                break;
-            case DropItemName.Speed:
-                tempV = plusSpeed;
-                break;
-            case DropItemName.Damage:
-                tempV = plusBulletDamage;
-                break;
-            case DropItemName.TimeBwtAttack:
-                tempV = plusBulletTimeBwtAttack;
-                break;
-            case DropItemName.BulletSpeed:
-                tempV = plusBulletSpeed;
-                break;
-            case DropItemName.DelayDieTime:
-                tempV = plusBulletDelayDieTimer;
-                break;
 
-        }
-        for (int i = 0; i < upgradeUIContainer.childCount; i++)
+    private void SetUpgradeUI()
+    {
+        foreach (Transform child in upgradeUIContainer)
         {
-            Transform tempChild = upgradeUIContainer.GetChild(i);
-            if (tempChild.TryGetComponent<UpgradeUIItem>(out var item))
-            {
-                if (item.dropItemName == itemName)
-                {
-                    item.UpgradeUItemInit(tempV.ToString());
-                    return;
-                }
-            }
+            Destroy(child.gameObject);
         }
-        UpgradeUIItem tempUIItem = null;
+
         for (int i = 0; i < upgradeItems.Count; i++)
         {
             UpgradeItem temp = upgradeItems[i];
-            if (temp.dropItemName == itemName)
+            int v = 0;
+            switch (temp.dropItemName)
             {
-                tempUIItem = temp.uiItem;
-                break;
+                case DropItemName.Health:
+                    v = plusHealth;
+                    break;
+                case DropItemName.Mana:
+                    v = plusMana;
+                    break;
+                case DropItemName.Speed:
+                    v = plusSpeed;
+                    break;
+                case DropItemName.Damage:
+                    v = plusBulletDamage;
+                    break;
+                case DropItemName.TimeBwtAttack:
+                    v = plusBulletTimeBwtAttack;
+                    break;
+                case DropItemName.DelayDieTime:
+                    v = plusBulletDelayDieTimer;
+                    break;
+                case DropItemName.BulletSpeed:
+                    v = plusBulletSpeed;
+                    break;
             }
-        }
-        if (tempUIItem != null)
-        {
-            UpgradeUIItem temp = Instantiate(tempUIItem, upgradeUIContainer);
-            temp.UpgradeUItemInit(tempV.ToString());
+            if (v > 0)
+            {
+                UpgradeUIItem tempUI = Instantiate(temp.uiItem, upgradeUIContainer);
+                tempUI.UpgradeUItemInit(v.ToString());
+            }
         }
     }
 }
