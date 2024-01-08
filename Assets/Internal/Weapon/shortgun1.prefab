@@ -134,6 +134,11 @@ MonoBehaviour:
   timeBwtAttack: 2
   delayDieTimer: 1
   bulletAmount: 1
-  bullet: {fileID: 3110729602296272094, guid: 7faa279360db9e74bbf321e679ab956c, type: 3}
+  bulletPosition: 0
   shootAngle: 8
   shootPos: {fileID: 6662699265940211020}
+  plusBulletDamage: 1
+  plusBulletSpeed: 1
+  plusBulletTimeBwtAttack: 1
+  plusBulletDelayDieTimer: 1
+  plusBulletAmount: 1

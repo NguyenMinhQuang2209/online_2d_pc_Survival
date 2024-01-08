@@ -102,8 +102,12 @@ MonoBehaviour:
   timeBwtAttack: 2
   delayDieTimer: 5
   bulletAmount: 1
-  bullet: {fileID: 0}
+  bulletPosition: 0
   shootAngle: 8
   shootPos: {fileID: 0}
-  customBullet: {fileID: 7320920614336019722, guid: 81f09b11482d3cc4f895fcdd684c27a9, type: 3}
-  attackRadious: 5
+  plusBulletDamage: 1
+  plusBulletSpeed: 1
+  plusBulletTimeBwtAttack: 1
+  plusBulletDelayDieTimer: 1
+  plusBulletAmount: 1
+  attackRadious: 8

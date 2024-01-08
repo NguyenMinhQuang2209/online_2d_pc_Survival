@@ -6,7 +6,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected float timeBwtAttack = 1f;
     [SerializeField] protected float delayDieTimer = 1f;
     [SerializeField] protected int bulletAmount = 1;
-    [SerializeField] protected Bullet bullet;
+    [SerializeField] protected int bulletPosition = 0;
     [SerializeField] protected float shootAngle = 8f;
     [SerializeField] protected Transform shootPos;
 

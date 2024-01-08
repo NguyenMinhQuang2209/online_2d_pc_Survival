@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RandomTargetWeapon : Weapon
 {
-    [SerializeField] private CustomBullet customBullet;
     [SerializeField] private float attackRadious = 1f;
     float currentTimeBwtAttack = 0f;
 
@@ -92,12 +91,21 @@ public class RandomTargetWeapon : Weapon
             if (nextTarget != null)
             {
                 currentTimeBwtAttack = 0f;
-                CustomBullet customBull = Instantiate(customBullet, transform.position, Quaternion.identity);
+                /*CustomBullet customBull = Instantiate(customBullet, transform.position, Quaternion.identity);
                 if (customBull.TryGetComponent<NetworkObject>(out var networkItem))
                 {
                     networkItem.Spawn();
                 }
-                customBull.CustomBulletInit(nextTarget, GetDamage(), GetSpeed(), GetDelayDieTime());
+                customBull.CustomBulletInitServerRpc(nextTarget.gameObject.GetInstanceID(), GetDamage(), GetSpeed(), GetDelayDieTime());*/
+
+                SpawnBulletController.instance.SpawnBulletItemServerRpc(
+                    bulletPosition,
+                    GetDamage(),
+                    GetSpeed(),
+                    GetDelayDieTime(),
+                    new float[] { transform.position.x, transform.position.y, transform.position.z },
+                    new float[] { 0f, 0f, 0f },
+                    nextTarget.gameObject.GetInstanceID());
             }
         }
 

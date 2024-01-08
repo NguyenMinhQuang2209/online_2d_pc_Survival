@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4042209745
+  GlobalObjectIdHash: 3925338605
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -372,6 +372,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 1708861710}
   moveSpeed: 3
   runSpeed: 5
+  plusSpeed: 0.2
   weaponContainer: {fileID: 9188540498384734382}
   defaultWeapon: {fileID: 1688709498336787562}
 --- !u!114 &800826739691171695

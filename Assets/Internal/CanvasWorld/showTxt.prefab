@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showTxt: {fileID: 4070864517686665865}
-  destroyTime: 5
+  destroyTime: 2
   floatSpeed: 2
 --- !u!114 &8180924727984788683
 MonoBehaviour:

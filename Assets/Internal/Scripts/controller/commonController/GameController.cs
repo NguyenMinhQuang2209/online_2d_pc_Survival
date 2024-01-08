@@ -1,17 +1,20 @@
-using UnityEngine;
+using Unity.Collections;
+using Unity.Netcode;
 
-public class GameController : MonoBehaviour
+public class GameController : NetworkBehaviour
 {
     public static GameController instance;
+
+    public NetworkVariable<int> gameMode = new NetworkVariable<int>();
 
     public enum GameMode
     {
         Lobby,
         SelectWeapon,
         Play,
-        Die
+        Die,
+        Ready
     }
-    private GameMode currentMode;
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -21,25 +24,31 @@ public class GameController : MonoBehaviour
         }
         instance = this;
     }
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        DontDestroyOnLoad(gameObject);
-        currentMode = GameMode.SelectWeapon;
+        if (IsServer)
+        {
+            DontDestroyOnLoad(gameObject);
+            gameMode.Value = (int)GameMode.SelectWeapon;
+        }
     }
     public bool CanMove()
     {
-        return currentMode == GameMode.SelectWeapon || currentMode == GameMode.Play;
+        return gameMode.Value == (int)GameMode.SelectWeapon || gameMode.Value == (int)GameMode.Play;
     }
     public bool CanDie()
     {
-        return currentMode == GameMode.Play;
+        return gameMode.Value == (int)GameMode.Play;
     }
     public bool CanShoot()
     {
-        return currentMode == GameMode.Play;
+        return gameMode.Value == (int)GameMode.Play;
     }
     public void ChangeCurrentMode(GameMode newMode)
     {
-        currentMode = newMode;
+        if (IsServer)
+        {
+            gameMode.Value = (int)newMode;
+        }
     }
 }

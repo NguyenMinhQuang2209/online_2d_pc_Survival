@@ -5,8 +5,9 @@ public class ShowTxtController : NetworkBehaviour
 {
     public static ShowTxtController instance;
     [SerializeField] private ShowTxtUI showTxtUI;
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        enabled = IsServer;
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -14,14 +15,13 @@ public class ShowTxtController : NetworkBehaviour
         }
         instance = this;
     }
-    [ServerRpc]
-    public void ShowUIServerRpc(Vector3 pos, string txt, Color color)
+    public void ShowUI(Vector3 pos, string txt)
     {
         ShowTxtUI tempShowTxtUI = Instantiate(showTxtUI, pos + Vector3.up * 0.5f, Quaternion.identity);
-        tempShowTxtUI.ShowTxtServerRpc(txt, color);
         if (tempShowTxtUI.TryGetComponent<NetworkObject>(out var networkItem))
         {
             networkItem.Spawn();
         }
+        tempShowTxtUI.ShowTxtServerRpc(new(txt));
     }
 }

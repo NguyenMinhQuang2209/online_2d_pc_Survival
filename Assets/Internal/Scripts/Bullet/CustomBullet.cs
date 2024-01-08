@@ -1,14 +1,18 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class CustomBullet : MonoBehaviour
+public class CustomBullet : NetworkBehaviour
 {
     private int damage = 1;
     private float speed = 1f;
     private Transform target = null;
-    bool startAttack = false;
 
     private void Update()
     {
+        if (!IsServer)
+        {
+            return;
+        }
         if (target != null)
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
@@ -23,21 +27,30 @@ public class CustomBullet : MonoBehaviour
                 }
             }*/
         }
-        else
+    }
+
+    [ServerRpc]
+    public void CustomBulletInitServerRpc(int targetId, int damage, float speed, float delayDestroyTime)
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
         {
-            if (startAttack)
+            if (players[i].GetInstanceID() == targetId)
             {
-                Destroy(gameObject);
+                target = players[i].transform;
+                break;
             }
         }
-    }
-    public void CustomBulletInit(Transform target, int damage, float speed, float delayDestroyTime)
-    {
-        startAttack = true;
-        this.target = target;
-        this.damage = damage;
-        this.speed = speed;
-        Destroy(gameObject, delayDestroyTime);
+        if (target == null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            this.damage = damage;
+            this.speed = speed;
+            Destroy(gameObject, delayDestroyTime);
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

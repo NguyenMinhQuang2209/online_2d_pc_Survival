@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.Netcode;
 
 public class CirclelyWeapon : Weapon
 {
@@ -20,15 +19,27 @@ public class CirclelyWeapon : Weapon
     }
     public override void Shoot()
     {
+        if (GameController.instance != null && !GameController.instance.CanShoot())
+        {
+            return;
+        }
         for (int i = 0; i < 360; i += (360 / GetBulletAmount()))
         {
             Vector3 shootPosition = shootPos ? shootPos.position : transform.position;
-            Bullet tempBullet = Instantiate(bullet, shootPosition, Quaternion.Euler(0f, 0f, i));
+            /*Bullet tempBullet = Instantiate(bullet, shootPosition, Quaternion.Euler(0f, 0f, i));
             if (tempBullet.TryGetComponent<NetworkObject>(out var networkObject))
             {
                 networkObject.Spawn();
             }
-            tempBullet.BulletInit(GetDamage(), tempBullet.transform.up * 2f, GetSpeed(), GetDelayDieTime());
+            tempBullet.BulletInitServerRpc(GetDamage(), tempBullet.transform.up * 2f, GetSpeed(), GetDelayDieTime());*/
+
+            SpawnBulletController.instance.SpawnBulletItemServerRpc(
+                   bulletPosition,
+                   GetDamage(),
+                   GetSpeed(),
+                   GetDelayDieTime(),
+                   new float[] { shootPosition.x, shootPosition.y, shootPosition.z },
+                   new float[] { 0f, 0f, i });
         }
     }
 }
