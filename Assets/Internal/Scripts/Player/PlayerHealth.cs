@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,7 @@ public class PlayerHealth : Health
 
     private bool canUseMana = true;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         HealthInit();
         currentMana = maxMana;
@@ -33,7 +34,7 @@ public class PlayerHealth : Health
     }
     private void Update()
     {
-        if (playerMovement.IsOwner)
+        if (playerMovement != null && playerMovement.IsOwner)
         {
             currentWaitRecoverMana += Time.deltaTime;
             if (currentWaitRecoverMana >= waitRecoverMana)
@@ -56,19 +57,30 @@ public class PlayerHealth : Health
     {
         base.HealthInit();
     }
-    public override void TakeDamage(int damage)
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void TakeDamageServerRpc(int damage)
     {
-        base.TakeDamage(damage);
+        base.TakeDamageServerRpc(damage);
+        ReloadSlider();
+        ReloadSliderClientRpc();
+    }
+
+    [ClientRpc]
+    public void ReloadSliderClientRpc()
+    {
         ReloadSlider();
     }
-    public override void DestroyObject()
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void DestroyObjectServerRpc()
     {
         //base.DestroyObject();
         gameObject.SetActive(false);
     }
     public void AddPlusHealth()
     {
-        plusHealth += plusHealthValue;
+        plusHealth.Value += plusHealthValue;
         ReloadSlider();
     }
     public void AddPlusMana()
@@ -153,9 +165,13 @@ public class PlayerHealth : Health
     {
         return canUseMana;
     }
-    public override void RecoverHealth(int v)
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void RecoverHealthServerRpc(int v)
     {
-        base.RecoverHealth(v);
+        base.RecoverHealthServerRpc(v);
+        ReloadSliderClientRpc();
         ReloadSlider();
     }
+
 }

@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 public class EnemyHealth : Health
@@ -9,15 +10,19 @@ public class EnemyHealth : Health
         enemy = GetComponent<Enemy>();
         HealthInit();
     }
-    public override void TakeDamage(int damage)
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void TakeDamageServerRpc(int damage)
     {
-        base.TakeDamage(damage);
+        base.TakeDamageServerRpc(damage);
         if (enemy != null)
         {
             enemy.EnemyGetHit();
         }
     }
-    public override void DestroyObject()
+
+    [ServerRpc(RequireOwnership = false)]
+    public override void DestroyObjectServerRpc()
     {
         if (TryGetComponent<Collider2D>(out var collider2d))
         {
@@ -27,6 +32,9 @@ public class EnemyHealth : Health
         {
             enemy.EnemyDie();
         }
-        Destroy(gameObject, delayDestroyTimer);
+        if (IsServer)
+        {
+            Destroy(gameObject, delayDestroyTimer);
+        }
     }
 }

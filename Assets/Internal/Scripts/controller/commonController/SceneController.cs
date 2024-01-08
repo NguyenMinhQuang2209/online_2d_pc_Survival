@@ -27,6 +27,10 @@ public class SceneController : MonoBehaviour
         }
         instance = this;
     }
+    private void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     private void Update()
     {
         string sceneName = SceneManager.GetActiveScene().name;

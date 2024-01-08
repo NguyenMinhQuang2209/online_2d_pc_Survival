@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DirectlyWeapon : Weapon
 {
-    float currentTimeBwtAttack = 0f;
+    /*float currentTimeBwtAttack = 0f;
     private void Update()
     {
         if (GameController.instance != null && !GameController.instance.CanShoot())
@@ -16,7 +16,7 @@ public class DirectlyWeapon : Weapon
             currentTimeBwtAttack = 0f;
             Shoot();
         }
-    }
+    }*/
     public override void Shoot()
     {
         Transform parent = transform.parent;

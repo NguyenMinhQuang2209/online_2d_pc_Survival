@@ -1,50 +1,56 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public abstract class Health : MonoBehaviour
+public abstract class Health : NetworkBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
-    protected int plusHealth = 0;
-    [SerializeField] private int currentHealth = 0;
+    [SerializeField] private NetworkVariable<int> maxHealth = new NetworkVariable<int>(100);
+    protected NetworkVariable<int> plusHealth = new NetworkVariable<int>(0);
+    [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
 
     public virtual void HealthInit()
     {
-        currentHealth = GetMaxHealth();
+        currentHealth.Value = GetMaxHealth();
     }
     public int GetMaxHealth()
     {
-        return maxHealth + plusHealth;
+        return maxHealth.Value + plusHealth.Value;
     }
     public int GetPlusHealth()
     {
-        return plusHealth;
+        return plusHealth.Value;
     }
     public int GetCurrentHealth()
     {
-        return currentHealth;
+        return currentHealth.Value;
     }
-    public virtual void TakeDamage(int damage)
+
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void TakeDamageServerRpc(int damage)
     {
         if (GameController.instance != null && !GameController.instance.CanDie())
         {
             return;
         }
 
-        currentHealth = Mathf.Max(0, currentHealth - damage);
+        currentHealth.Value = Mathf.Max(0, currentHealth.Value - damage);
         if (ShowTxtController.instance != null)
         {
-            ShowTxtController.instance.ShowUI(transform.position, damage.ToString());
+            ShowTxtController.instance.ShowUIServerRpc(new[] { transform.position.x, transform.position.y, transform.position.z }, damage.ToString());
         }
-        if (currentHealth == 0)
+        if (currentHealth.Value == 0)
         {
-            DestroyObject();
+            DestroyObjectServerRpc();
         }
     }
-    public virtual void DestroyObject()
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void DestroyObjectServerRpc()
     {
         Destroy(gameObject);
     }
-    public virtual void RecoverHealth(int v)
+
+    [ServerRpc(RequireOwnership = false)]
+    public virtual void RecoverHealthServerRpc(int v)
     {
-        currentHealth = Mathf.Min(currentHealth + v, GetMaxHealth());
+        currentHealth.Value = Mathf.Min(currentHealth.Value + v, GetMaxHealth());
     }
 }

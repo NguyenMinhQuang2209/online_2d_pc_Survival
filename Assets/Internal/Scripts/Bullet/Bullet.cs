@@ -11,12 +11,12 @@ public class Bullet : NetworkBehaviour
     {
         if (collision.TryGetComponent<Health>(out var health))
         {
-            health.TakeDamage(damage);
+            health.TakeDamageServerRpc(damage);
             Destroy(gameObject);
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void BulletInitServerRpc(int damage, Vector3 shootDir, float speed, float destroyTime)
     {
         this.damage = damage;

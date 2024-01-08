@@ -82,7 +82,7 @@ public class Enemy : NetworkBehaviour
     {
         if (collision.gameObject.TryGetComponent<Health>(out var health))
         {
-            health.TakeDamage(damage);
+            health.TakeDamageServerRpc(damage);
         }
     }
     public void EnemyDie()

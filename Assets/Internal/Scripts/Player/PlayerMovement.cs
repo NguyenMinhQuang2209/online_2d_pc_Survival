@@ -25,6 +25,10 @@ public class PlayerMovement : NetworkBehaviour
 
     private PlayerHealth playerHealth;
 
+    float currentTimeBwtAttack = 0f;
+
+    Weapon currentWeapon = null;
+
 
     public override void OnNetworkSpawn()
     {
@@ -43,6 +47,11 @@ public class PlayerMovement : NetworkBehaviour
                 }
             }
             playerHealth = GetComponent<PlayerHealth>();
+
+            if (defaultWeapon.TryGetComponent<Weapon>(out currentWeapon))
+            {
+
+            }
 
             SceneController.instance.ChangeSceneEvent += HandleChangeScene;
         }
@@ -106,6 +115,24 @@ public class PlayerMovement : NetworkBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
 
         MouseRotation();
+
+        WeaponShoot();
+
+    }
+    private void WeaponShoot()
+    {
+
+        if (GameController.instance != null && !GameController.instance.CanShoot())
+        {
+            return;
+        }
+
+        currentTimeBwtAttack += Time.deltaTime;
+        if (currentTimeBwtAttack >= currentWeapon.GetTimeBwtAttack())
+        {
+            currentTimeBwtAttack = 0f;
+            currentWeapon.Shoot();
+        }
     }
     private void FixedUpdate()
     {
@@ -113,6 +140,7 @@ public class PlayerMovement : NetworkBehaviour
 
         Movement();
     }
+
     private void Movement()
     {
         if (GameController.instance != null && !GameController.instance.CanMove())
@@ -152,7 +180,7 @@ public class PlayerMovement : NetworkBehaviour
             }
             Destroy(child.gameObject);
         }
-
+        currentWeapon = weapon;
         if (weapon != null)
         {
             Destroy(defaultWeapon);

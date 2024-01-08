@@ -5,14 +5,14 @@ using UnityEngine;
 public class RandomTargetWeapon : Weapon
 {
     [SerializeField] private float attackRadious = 1f;
-    float currentTimeBwtAttack = 0f;
+    //float currentTimeBwtAttack = 0f;
 
     Transform rootParent = null;
     private void Start()
     {
         rootParent = transform.parent;
     }
-    private void Update()
+    /*private void Update()
     {
         if (GameController.instance != null && !GameController.instance.CanShoot())
         {
@@ -24,7 +24,7 @@ public class RandomTargetWeapon : Weapon
         {
             Shoot();
         }
-    }
+    }*/
     public override void Shoot()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRadious);
@@ -88,15 +88,16 @@ public class RandomTargetWeapon : Weapon
                 }
             }
 
-            if (nextTarget != null)
+            if (nextTarget != null && nextTarget.TryGetComponent<NetworkObject>(out var networkObject))
             {
-                currentTimeBwtAttack = 0f;
+                //currentTimeBwtAttack = 0f;
                 /*CustomBullet customBull = Instantiate(customBullet, transform.position, Quaternion.identity);
                 if (customBull.TryGetComponent<NetworkObject>(out var networkItem))
                 {
                     networkItem.Spawn();
                 }
                 customBull.CustomBulletInitServerRpc(nextTarget.gameObject.GetInstanceID(), GetDamage(), GetSpeed(), GetDelayDieTime());*/
+
 
                 SpawnBulletController.instance.SpawnBulletItemServerRpc(
                     bulletPosition,
@@ -105,7 +106,7 @@ public class RandomTargetWeapon : Weapon
                     GetDelayDieTime(),
                     new float[] { transform.position.x, transform.position.y, transform.position.z },
                     new float[] { 0f, 0f, 0f },
-                    nextTarget.gameObject.GetInstanceID());
+                    networkObject.NetworkObjectId);
             }
         }
 

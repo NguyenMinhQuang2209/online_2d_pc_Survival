@@ -9,7 +9,6 @@ public class SpawnBulletController : NetworkBehaviour
 
     public static SpawnBulletController instance;
 
-
     public override void OnNetworkSpawn()
     {
         enabled = IsServer;
@@ -22,7 +21,7 @@ public class SpawnBulletController : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void SpawnBulletItemServerRpc(int pos, int damage, float speed, float detroyTime, float[] position, float[] rotate, int target)
+    public void SpawnBulletItemServerRpc(int pos, int damage, float speed, float detroyTime, float[] position, float[] rotate, ulong target)
     {
         CustomBullet customBull = Instantiate(customBullets[pos], new(position[0], position[1], position[2]), Quaternion.Euler(new(rotate[0], rotate[1], rotate[2])));
         if (customBull.TryGetComponent<NetworkObject>(out var networkItem))

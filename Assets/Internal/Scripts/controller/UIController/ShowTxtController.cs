@@ -15,9 +15,11 @@ public class ShowTxtController : NetworkBehaviour
         }
         instance = this;
     }
-    public void ShowUI(Vector3 pos, string txt)
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ShowUIServerRpc(float[] pos, string txt)
     {
-        ShowTxtUI tempShowTxtUI = Instantiate(showTxtUI, pos + Vector3.up * 0.5f, Quaternion.identity);
+        ShowTxtUI tempShowTxtUI = Instantiate(showTxtUI, new Vector3(pos[0], pos[1], pos[2]) + Vector3.up * 0.5f, Quaternion.identity);
         if (tempShowTxtUI.TryGetComponent<NetworkObject>(out var networkItem))
         {
             networkItem.Spawn();
