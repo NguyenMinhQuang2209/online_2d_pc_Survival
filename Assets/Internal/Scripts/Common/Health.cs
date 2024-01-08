@@ -7,6 +7,7 @@ public abstract class Health : NetworkBehaviour
     protected NetworkVariable<int> plusHealth = new NetworkVariable<int>(0);
     [SerializeField] private NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
 
+    bool objectDie = false;
     public virtual void HealthInit()
     {
         currentHealth.Value = GetMaxHealth();
@@ -31,6 +32,10 @@ public abstract class Health : NetworkBehaviour
         {
             return;
         }
+        if (objectDie)
+        {
+            return;
+        }
 
         currentHealth.Value = Mathf.Max(0, currentHealth.Value - damage);
 
@@ -41,6 +46,7 @@ public abstract class Health : NetworkBehaviour
         if (currentHealth.Value == 0)
         {
             DestroyObjectServerRpc();
+            objectDie = true;
         }
     }
     [ServerRpc(RequireOwnership = false)]

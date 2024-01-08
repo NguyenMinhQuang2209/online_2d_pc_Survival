@@ -231,6 +231,7 @@ MonoBehaviour:
   damage: 1
   moveSpeed: 1
   changeTargetDistance: 10
+  waitDamageTime: 2
 --- !u!114 &1861318832374112723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth:
-    m_InternalValue: 100
+    m_InternalValue: 3
   currentHealth:
     m_InternalValue: 0
   delayDestroyTimer: 3

@@ -32,9 +32,6 @@ public class EnemyHealth : Health
         {
             enemy.EnemyDie();
         }
-        if (IsServer)
-        {
-            Destroy(gameObject, delayDestroyTimer);
-        }
+        Destroy(gameObject, delayDestroyTimer);
     }
 }
