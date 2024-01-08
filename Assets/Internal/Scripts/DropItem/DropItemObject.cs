@@ -12,7 +12,7 @@ public class DropItemObject : MonoBehaviour
         if (randomRate <= dropRate)
         {
             int randomItem = Random.Range(0, dropItemName.Count);
-            DropSystemController.instance.SpawnDropItem(dropItemName[randomItem], transform.position);
+            DropSystemController.instance.SpawnDropItemServerRpc(dropItemName[randomItem], new[] { transform.position.x, transform.position.y, transform.position.z });
         }
     }
 }

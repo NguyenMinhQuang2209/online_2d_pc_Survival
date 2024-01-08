@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class DropSystemController : MonoBehaviour
+public class DropSystemController : NetworkBehaviour
 {
     public static DropSystemController instance;
 
@@ -17,6 +18,10 @@ public class DropSystemController : MonoBehaviour
         }
         instance = this;
     }
+    public override void OnNetworkSpawn()
+    {
+        enabled = IsServer;
+    }
 
     public DropItem GetWorldItem(DropItemName itemName)
     {
@@ -29,12 +34,18 @@ public class DropSystemController : MonoBehaviour
         }
         return null;
     }
-    public void SpawnDropItem(DropItemName itemName, Vector3 pos)
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnDropItemServerRpc(DropItemName itemName, float[] pos)
     {
         DropItem item = GetWorldItem(itemName);
         if (item != null)
         {
-            Instantiate(item, pos, Quaternion.identity);
+            DropItem temp = Instantiate(item, new(pos[0], pos[1], pos[2]), Quaternion.identity);
+            if (temp.TryGetComponent<NetworkObject>(out var networkObject))
+            {
+                networkObject.Spawn();
+            }
         }
     }
 

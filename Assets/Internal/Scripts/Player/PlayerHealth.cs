@@ -27,7 +27,10 @@ public class PlayerHealth : Health
 
     public override void OnNetworkSpawn()
     {
-        HealthInit();
+        if (IsServer)
+        {
+            HealthInit();
+        }
         currentMana = maxMana;
     }
     private void Update()
@@ -53,11 +56,6 @@ public class PlayerHealth : Health
             ReloadHealth();
         }
     }
-    public override void HealthInit()
-    {
-        base.HealthInit();
-    }
-
 
     [ServerRpc(RequireOwnership = false)]
     public override void DestroyObjectServerRpc()

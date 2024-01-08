@@ -14,6 +14,8 @@ public class Enemy : NetworkBehaviour
     float currentWaitDamageTime = 0f;
 
     Transform target = null;
+
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -106,6 +108,10 @@ public class Enemy : NetworkBehaviour
                 agent.isStopped = true;
                 agent.enabled = false;
                 agent = null;
+                if (TryGetComponent<DropItemObject>(out var dropItemObject))
+                {
+                    dropItemObject.DropItem();
+                }
             }
         }
     }

@@ -84239,7 +84239,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1674236834}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &229005118
 MonoBehaviour:
@@ -84376,6 +84376,18 @@ MonoBehaviour:
   enemySpawnConfig:
   - enemy: {fileID: 6049497382631442669, guid: 4e3dd3b7891cd5d4e8eebe769f34ea59, type: 3}
     day: 0
+    spawnTime: 3
+  - enemy: {fileID: 5270289465353233869, guid: 2cb73e5928b7c0c43a3c56223795f16c, type: 3}
+    day: 3
+    spawnTime: 3
+  - enemy: {fileID: 6843165705156979665, guid: 5e41f9caa729b344aa1ff89b70612956, type: 3}
+    day: 6
+    spawnTime: 3
+  - enemy: {fileID: 1733433151383735935, guid: 52d565b3ea160c44cb5f17debce57ed4, type: 3}
+    day: 9
+    spawnTime: 3
+  - enemy: {fileID: 3612258126027876524, guid: f5c42233325a5e34aa30368c32c7348f, type: 3}
+    day: 12
     spawnTime: 3
 --- !u!4 &455303791
 Transform:
@@ -84989,7 +85001,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1674236834}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &880339010
 MonoBehaviour:
@@ -86196,6 +86208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1483791744}
+  - component: {fileID: 1483791745}
   - component: {fileID: 1483791743}
   m_Layer: 0
   m_Name: DropSystemController
@@ -86216,7 +86229,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80369c328dd6ac142b4e5cb38c5bb008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropItems: []
+  dropItems:
+  - itemName: 2
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 3
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 0
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 1
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 4
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 5
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 6
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 7
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
+  - itemName: 8
+    worldItem: {fileID: 55154136204169042, guid: 6224089034ecca941a94cd8779c61439, type: 3}
 --- !u!4 &1483791744
 Transform:
   m_ObjectHideFlags: 0
@@ -86229,9 +86260,29 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1674236834}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1483791745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483791742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 411484168
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1532142480
 GameObject:
   m_ObjectHideFlags: 0
@@ -86321,7 +86372,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1674236834}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1674236833
 GameObject:
@@ -86351,7 +86402,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1483791744}
   - {fileID: 1669740258}
   - {fileID: 880339009}
   - {fileID: 2141051693}
@@ -86702,7 +86752,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1674236834}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2141051694
 MonoBehaviour:
