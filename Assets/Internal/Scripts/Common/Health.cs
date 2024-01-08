@@ -33,6 +33,7 @@ public abstract class Health : NetworkBehaviour
         }
 
         currentHealth.Value = Mathf.Max(0, currentHealth.Value - damage);
+
         if (ShowTxtController.instance != null)
         {
             ShowTxtController.instance.ShowUIServerRpc(new[] { transform.position.x, transform.position.y, transform.position.z }, damage.ToString());

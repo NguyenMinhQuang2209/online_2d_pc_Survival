@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   speed: 200
-  timeBwtAttack: 5
+  timeBwtAttack: 3
   delayDieTimer: 1
   bulletAmount: 1
   bulletPosition: 1

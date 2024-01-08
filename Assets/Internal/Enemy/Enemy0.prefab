@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 423082841126636621}
   m_Layer: 6
   m_Name: Enemy0
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2571338373
+  GlobalObjectIdHash: 2320935009
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -243,8 +243,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640d8dd7164cf3a4e8c1776024e1714c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
-  currentHealth: 0
+  maxHealth:
+    m_InternalValue: 100
+  currentHealth:
+    m_InternalValue: 0
   delayDestroyTimer: 3
 --- !u!95 &6565237538015451974
 Animator:
@@ -293,3 +295,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabf958ba06f68f42b24aee1d6bffff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dropRate: 5
+  dropItemName: 

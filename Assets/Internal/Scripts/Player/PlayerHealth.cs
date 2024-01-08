@@ -22,7 +22,6 @@ public class PlayerHealth : Health
     private Slider manaSlider;
     private TextMeshProUGUI healthTxt;
     private TextMeshProUGUI manaTxt;
-    private PlayerMovement playerMovement;
 
     private bool canUseMana = true;
 
@@ -30,11 +29,10 @@ public class PlayerHealth : Health
     {
         HealthInit();
         currentMana = maxMana;
-        playerMovement = GetComponent<PlayerMovement>();
     }
     private void Update()
     {
-        if (playerMovement != null && playerMovement.IsOwner)
+        if (IsOwner)
         {
             currentWaitRecoverMana += Time.deltaTime;
             if (currentWaitRecoverMana >= waitRecoverMana)
@@ -51,6 +49,8 @@ public class PlayerHealth : Health
                     canUseMana = true;
                 }
             }
+
+            ReloadHealth();
         }
     }
     public override void HealthInit()
@@ -58,19 +58,6 @@ public class PlayerHealth : Health
         base.HealthInit();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public override void TakeDamageServerRpc(int damage)
-    {
-        base.TakeDamageServerRpc(damage);
-        ReloadSlider();
-        ReloadSliderClientRpc();
-    }
-
-    [ClientRpc]
-    public void ReloadSliderClientRpc()
-    {
-        ReloadSlider();
-    }
 
     [ServerRpc(RequireOwnership = false)]
     public override void DestroyObjectServerRpc()
@@ -107,7 +94,6 @@ public class PlayerHealth : Health
         this.manaSlider = manaSlider;
         this.healthTxt = healthTxt;
         this.manaTxt = manaTxt;
-
         ReloadSlider();
     }
     private void ReloadSlider()
@@ -131,6 +117,19 @@ public class PlayerHealth : Health
             if (manaTxt != null)
             {
                 manaTxt.text = (int)GetCurrentMana() + "/" + (int)GetMaxMana();
+            }
+        }
+    }
+    private void ReloadHealth()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = GetMaxHealth();
+            healthSlider.minValue = 0f;
+            healthSlider.value = GetCurrentHealth();
+            if (healthTxt != null)
+            {
+                healthTxt.text = GetCurrentHealth() + "/" + GetMaxHealth();
             }
         }
     }
@@ -170,8 +169,6 @@ public class PlayerHealth : Health
     public override void RecoverHealthServerRpc(int v)
     {
         base.RecoverHealthServerRpc(v);
-        ReloadSliderClientRpc();
-        ReloadSlider();
     }
 
 }

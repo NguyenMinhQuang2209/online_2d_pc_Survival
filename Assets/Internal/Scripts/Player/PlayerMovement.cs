@@ -180,11 +180,11 @@ public class PlayerMovement : NetworkBehaviour
             }
             Destroy(child.gameObject);
         }
-        currentWeapon = weapon;
         if (weapon != null)
         {
             Destroy(defaultWeapon);
             Weapon weaponTemp = Instantiate(weapon, weaponContainer.transform);
+            currentWeapon = weaponTemp;
             weaponTemp.transform.localPosition = Vector3.zero;
         }
     }

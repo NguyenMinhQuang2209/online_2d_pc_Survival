@@ -7,8 +7,11 @@ public class Enemy : NetworkBehaviour
     [SerializeField] private int damage = 1;
     [SerializeField] private float moveSpeed = 2f;
     [SerializeField] private float changeTargetDistance = 10f;
+    [SerializeField] private float waitDamageTime = 2f;
     private NavMeshAgent agent;
     private Animator animator;
+
+    float currentWaitDamageTime = 0f;
 
     Transform target = null;
     public override void OnNetworkSpawn()
@@ -26,6 +29,8 @@ public class Enemy : NetworkBehaviour
             agent.speed = moveSpeed;
 
             animator = GetComponent<Animator>();
+
+            currentWaitDamageTime = waitDamageTime;
         }
     }
     private void Update()
@@ -34,6 +39,8 @@ public class Enemy : NetworkBehaviour
         {
             EnemyTargetObject();
             ChasePlayer();
+
+            currentWaitDamageTime += Time.deltaTime;
         }
     }
     private void EnemyTargetObject()
@@ -78,11 +85,15 @@ public class Enemy : NetworkBehaviour
             }
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Health>(out var health))
+        if (currentWaitDamageTime >= waitDamageTime)
         {
-            health.TakeDamageServerRpc(damage);
+            currentWaitDamageTime = 0f;
+            if (collision.gameObject.TryGetComponent<Health>(out var health))
+            {
+                health.TakeDamageServerRpc(damage);
+            }
         }
     }
     public void EnemyDie()

@@ -9,6 +9,8 @@ public class CustomBullet : NetworkBehaviour
 
     private NetworkVariable<ulong> objectId = new NetworkVariable<ulong>();
 
+    bool startBullet = false;
+
     private void Update()
     {
         if (!IsServer)
@@ -29,35 +31,27 @@ public class CustomBullet : NetworkBehaviour
                 }
             }*/
         }
+        else
+        {
+            if (startBullet)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void CustomBulletInitServerRpc(ulong targetId, int damage, float speed, float delayDestroyTime)
     {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        for (int i = 0; i < players.Length; i++)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemies.Length; i++)
         {
-            if (players[i].TryGetComponent<NetworkObject>(out var networkObject))
+            if (enemies[i].TryGetComponent<NetworkObject>(out var networkObject))
             {
                 if (networkObject.NetworkObjectId == targetId)
                 {
-                    target = players[i].transform;
+                    target = enemies[i].transform;
                     break;
-                }
-            }
-        }
-        if (target == null)
-        {
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            for (int i = 0; i < enemies.Length; i++)
-            {
-                if (enemies[i].TryGetComponent<NetworkObject>(out var networkObject))
-                {
-                    if (networkObject.NetworkObjectId == targetId)
-                    {
-                        target = players[i].transform;
-                        break;
-                    }
                 }
             }
         }
@@ -70,6 +64,7 @@ public class CustomBullet : NetworkBehaviour
             objectId.Value = targetId;
             this.damage = damage;
             this.speed = speed;
+            startBullet = true;
             Destroy(gameObject, delayDestroyTime);
         }
     }
